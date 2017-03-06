@@ -1,0 +1,41 @@
+{
+  "name": "pressure-voxels",
+  "version": "1.0.0",
+  "description": "A game designed to teach children about pressure using a voxel-based quest",
+  "main": "source.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Beck Peters",
+  "license": "ISC",
+  "dependencies": {
+    "voxel-hello-world": "latest",
+    "minecraft-mca": "latest",
+    "binary-xhr": "latest",
+    "minecraft-region": "latest",
+    "painterly-textures": "latest",
+    "hackedvoxels-inventory-dialog": "latest",
+    "voxel-inventory-hotbar": "latest",
+    "inventory": "latest",
+    "inventory-window": "latest",
+    "voxel-registry": "latest",
+    "voxel-webview": "latest",
+    "voxel-plugins": "latest",
+    "kb-controls": "latest",
+    "raf": "latest",
+    "game-shell": "latest",
+    "voxel-player": "latest",
+    "voxel-console": "latest",
+    "voxel-commands": "latest",
+    "voxel-shader": "latest",
+    "voxel-keys": "latest",
+    "voxel-stitch": "latest",
+    "game-shell-fps-camera": "latest",
+    "voxel-engine-stackgl": "latest",
+    "voxel-mesher": "latest",
+    "voxel-flatland": "latest", 
+    "voxel-bedrock": "latest",
+    "voxel-modal-dialog": "latest",
+    "vkeys": "latest"
+  }
+}
