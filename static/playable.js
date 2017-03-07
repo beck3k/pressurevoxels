@@ -50622,17 +50622,17 @@ var regionFile = 'region/r.' + regionX + '.' + regionZ + '.mca';
 var game = require('voxel-hello-world')({
 	generate: function(x, y, z){return 0},
 	textures: './textures/',
-	materials: [['grass', 'dirt', 'grass_dirt'], 'brick', 'dirt', 'bedrock'],
+	materials: [['grass', 'dirt', 'grass_dirt'], 'brick', 'dirt', 'bedrock', 'cobblestone', 'netherrack', 'plank', 'obsidian'],
 	materialFlatColor: false,
 	chunkSize: 16
 })
 
 var createPlayer = require('voxel-player')(game);
-/*
+
 var player = createPlayer('player.png');
 player.possess();
 player.yaw.position.set(pos[0], pos[1], pos[2]); 
-*/
+
 class BlankModal extends Modal {
   constructor(game, opts) {
     super(game, Object.assign(opts, {element: getCover() }));
@@ -50708,6 +50708,23 @@ function continueMsg(){
 var page = 0;
 var goal = "talking";
 
+function safeQuestion(){
+	var safeQuestionContents = $('<div><h1>Please select the correct combo</h1><button onclick="badQuestion();">P = P/P</button><button onClick="badQuestion()">E = M2C</button><button onClick="badQuestion()">P = A/F</button></div>');
+	$(safeQuestionContents).dialog({
+		closeText: "P = F/A"
+	});
+	goal = 'puseyRoom';
+	player.yaw.position.set(247, 104, 253);
+	consoleWidget("You made it in!");
+}
+function badQuestion(){
+	var badQuestionContents = $('<p style="color:red">Incorrect</p>');
+	$(badQuestionContents).dialog();
+}
+function correctSafe(){
+	console.log("test");
+}
+
 window.addEventListener('keydown', function(e){
 	if(vkeys[e.keyCode] == "e"){
 		//console.log(game.controls.target().avatar.position);
@@ -50719,6 +50736,83 @@ window.addEventListener('keydown', function(e){
 				continueMsg();
 			}	
 		}
+		if(testblock(260 , 104, 253) == true){
+			if(goal == "hallway"){
+				blankbox.open();
+				consoleWidget.log("Looks like your in a hallway");
+				var hallwayDialog = $('<h1>Second level hallway</h1>');
+				$(hallwayDialog).dialog();
+			}
+		}
+		if(testblock(256, 104, 253) == true){
+			if(goal == "hallway"){
+				blankbox.open();
+				consoleWidget.log("Looks like a library, there might be some important information in there");
+				var libraryDialog = $('<h1>George Washington library</h1>');
+				$(libraryDialog).dialog();
+			}
+		}
+		if(testblock(255, 104, 259) == true){
+			blankbox.open();
+			consoleWidget.log("How Rude!, someone tore a page out of a book, and then left in on the ground! Kids these days.");
+			var tornPaper = $('<img src="textures/note.png"></img>');
+			$(tornPaper).dialog();
+			goal = 'library';
+		}
+		if(testblock(250, 104, 253) == true){
+			if(goal == "library"){
+				blankbox.open();
+				consoleWidget.log("Looks like some kind of safe, do you know the combo?");
+				var goodAnswer = safeQuestion(); 				
+				//for(goodAnswer == false){
+				//
+				//}
+				while(goodAnswer == false){}				
+				if(goodAnswer == true){
+					console.log("it works");
+				}		
+			}else{
+				consoleWidget.log("Maybe you should look around more first...");
+			}
+		}
+		if(testblock(246, 104, 252) == true){
+			if(goal == "puseyRoom"){
+				blankbox.open();
+				consoleWidget.log("This must the backroom in Mr. Pusey's classroom");
+				var puseyRoom = $("<h1>Mr. Pusey's Classroom Backroom<h1>");
+				$(puseyRoom).dialog();
+			}
+		}
+		if(testblock(244, 104, 251) == true){
+			if(goal == "puseyRoom"){
+				blankbox.open();
+				consoleWidget.log("A computer! we could use this to learn about fluid pressure");
+				var puseyComputer = $('<iframe width="560" height="315" src="https://www.youtube.com/embed/7m7J5T7c6ig" frameborder="0" allowfullscreen></iframe>');
+				$(puseyComputer).dialog();
+				goal = "leave";
+			}
+		}
+		if(testblock(247, 104, 250) == true){
+			if(goal == "leave"){
+				blankbox.open();
+				var gameOverMsg = $('<div><h3>(Mr. Pusey)What are you doing back here ?!?!?!?</h3><br><h4>(You)Im learning about pressure</h4><br><h3>(Mr. Pusey)Why are you learning in school? Get out!</h3><br><h1>Game Over</h1></div>');
+				$(gameOverMsg).dialog();
+			}else{
+				consoleWidget.log("You are not premited to do this yet");			
+			}
+		}
+	}
+	if(vkeys[e.keyCode] == "h"){
+		consoleWidget.log("H: Help");
+		consoleWidget.log("W: Forward");
+		consoleWidget.log("A: Strafe Left");
+		consoleWidget.log("S: Back");
+		consoleWidget.log("D: Strafe right");
+		consoleWidget.log("E: Interact");
+		consoleWidget.log("F: Forward Page");
+	}
+	if(vkeys[e.keyCode] == "l"){
+		console.log(game.controls.target().avatar.position);
 	}
 	if(vkeys[e.keyCode] == "f"){
 		if(goal == "talking"){
@@ -50763,8 +50857,9 @@ window.addEventListener('keydown', function(e){
 			});
 		}
 		if(page == 9){
-			consoleWidget.log("You are now free to leave lexi!");
-			consoleWidget.log("(To Continue, walk to the living room and sit down by pressing 'E')");
+			consoleWidget.log("You are now released to try the game yourself");
+			goal = "hallway";
+			player.yaw.position.set(261, 104, 253);
 		}
 	}
 	}
