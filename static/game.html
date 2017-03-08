@@ -7,9 +7,11 @@
 		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 		<style>
-
 			#fps{
 				visibility: hidden;
+			}
+			.no-close .ui-dialog-titlebar-close {
+				  display: none;
 			}
 		</style>
 	</head>
@@ -19,15 +21,10 @@
 		<script>
 		function badQuestion(){
 			var badQuestionContents = $('<p style="color:red">Incorrect</p>');
-				$(badQuestionContents).dialog({
-				close: function(){safeQuestion();}
-			});
-		}
-		/*	
-		function correctSafe(){
-			player.yaw.postion.set(247, 104, 253);
-		}
-		*/
+				$(badQuestionContents).dialog();
+		}	
+
+		
 		</script>
 
 	</body>

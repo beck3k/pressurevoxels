@@ -14,6 +14,8 @@ var consoleWidget = require('console-widget')();
 
 //var materials = [["adminium"], "stationary_lava", "stone", "dirt", "redstone_ore", "coal_ore", "gravel", "iron_ore", "double_stone_slab", "grass", "sandstone", "stone_slab", "stone_pressure_plate", "brick", "glass", "iron_door", "wall_sign", "nether_brick_fence", "glowstone", "torch", "wool", "glass_pane", "wood", "wooden_stairs", "bookshelf", "ladder", "nether_brick_stairs", "wooden_plank", "fence", "stone_brick_stairs", "workbench", "wooden_door", "jukebox", "stone_brick", "chest", "iron_block", "furnace", "brick_stairs", "wooden_pressure_plate", "cobblestone", "clay", "fence_gate", "stationary_water", "minecart_track", "powered_rail", "colored_wool", "leaves", "lapis_lazuli_ore", "gold_ore", "obsidian", "brown_mushroom", "redstone_torch_on", "moss_stone", "monster_spawner", "diamond_ore", "signpost", "gold_block", "white_wool", "orange_wool", "magenta_wool", "light_blue_wool", "yellow_wool", "lime_wool", "pink_wool", "dark_gray_wool", "light_gray_wool", "light_blue_wool", "purple_wool", "dark_blue_wool", "brown_wool", "green_wool", "red_wool", "black_wool"]
 
+var username = "";
+
 var pos = [258, 100, 250];
 var regionX = Math.floor((pos[0] >> 4) / 32);
 var regionZ = Math.floor((pos[2] >> 4) / 32);
@@ -109,20 +111,54 @@ var page = 0;
 var goal = "talking";
 
 function safeQuestion(){
-	var safeQuestionContents = $('<div><h1>Please select the correct combo</h1><button onclick="badQuestion();">P = P/P</button><button onClick="badQuestion()">E = M2C</button><button onClick="badQuestion()">P = A/F</button></div>');
+	//var safeQuestionContents = $('<div><h1>Please select the correct combo</h1><button style="position:absolute" onclick="goodQuestion();">P = P/P</button><button onClick="badQuestion()">E = M2C</button><button onClick="badQuestion()">P = A/F</button></div>');
+	safeQuestionContents = $('<h1>Please select the correct combo</h1>');
 	$(safeQuestionContents).dialog({
-		closeText: "P = F/A"
+	//close: function(){goal = 'puseyRoom'; player.yaw.position.set(247, 104, 253); consoleWidget.log("You made it in!");},
+	dialogClass: "no-close",
+	buttons: [
+		{
+			text: "P = F/A",
+			click: function(){
+				correctSafe();
+				changeScore(75)
+				$(this).dialog("destroy");			
+			}
+
+		},
+		{
+			text: "P = P/P",
+			click: function(){
+				changeScore(-50);
+				badQuestion();
+			}		
+		},
+		{
+			text: "E = F/A",
+			click: function(){
+				changeScore(-50);
+				badQuestion();
+			}		
+		},
+		{
+			text: "P = A/F",
+			click: function(){
+				changeScore(50);
+				badQuestion();
+			}		
+		}
+	]
 	});
-	goal = 'puseyRoom';
-	player.yaw.position.set(247, 104, 253);
-	consoleWidget("You made it in!");
+
 }
 function badQuestion(){
 	var badQuestionContents = $('<p style="color:red">Incorrect</p>');
 	$(badQuestionContents).dialog();
 }
 function correctSafe(){
-	console.log("test");
+	goal = 'puseyRoom'; 
+	player.yaw.position.set(247, 104, 253); 
+	consoleWidget.log("You made it in!");
 }
 
 window.addEventListener('keydown', function(e){
@@ -158,6 +194,7 @@ window.addEventListener('keydown', function(e){
 			var tornPaper = $('<img src="textures/note.png"></img>');
 			$(tornPaper).dialog();
 			goal = 'library';
+			changeScore(25);
 		}
 		if(testblock(250, 104, 253) == true){
 			if(goal == "library"){
@@ -181,22 +218,25 @@ window.addEventListener('keydown', function(e){
 				consoleWidget.log("This must the backroom in Mr. Pusey's classroom");
 				var puseyRoom = $("<h1>Mr. Pusey's Classroom Backroom<h1>");
 				$(puseyRoom).dialog();
+				changeScore(2);
 			}
 		}
 		if(testblock(244, 104, 251) == true){
 			if(goal == "puseyRoom"){
 				blankbox.open();
 				consoleWidget.log("A computer! we could use this to learn about fluid pressure");
-				var puseyComputer = $('<iframe width="560" height="315" src="https://www.youtube.com/embed/7m7J5T7c6ig" frameborder="0" allowfullscreen></iframe>');
+				var puseyComputer = $('<iframe src="fluidpressure.html"></iframe>');
 				$(puseyComputer).dialog();
 				goal = "leave";
+				changeScore(50);
 			}
 		}
-		if(testblock(247, 104, 250) == true){
+		if(testblock(248, 104, 250) == true){
 			if(goal == "leave"){
 				blankbox.open();
 				var gameOverMsg = $('<div><h3>(Mr. Pusey)What are you doing back here ?!?!?!?</h3><br><h4>(You)Im learning about pressure</h4><br><h3>(Mr. Pusey)Why are you learning in school? Get out!</h3><br><h1>Game Over</h1></div>');
 				$(gameOverMsg).dialog();
+				changeScore(100);
 			}else{
 				consoleWidget.log("You are not premited to do this yet");			
 			}
@@ -242,6 +282,7 @@ window.addEventListener('keydown', function(e){
 		if(page == 6){
 			consoleWidget.log("Try It!");
 			consoleWidget.log("(Complete the task)");
+			changeScore(25);
 			goal = "greenTiletut";
 		}
 		if(page == 7){
@@ -259,7 +300,7 @@ window.addEventListener('keydown', function(e){
 		if(page == 9){
 			consoleWidget.log("You are now released to try the game yourself");
 			goal = "hallway";
-			player.yaw.position.set(261, 104, 253);
+			player.yaw.position.set(260, 104, 253);
 		}
 	}
 	}
@@ -267,5 +308,30 @@ window.addEventListener('keydown', function(e){
 });
 
 consoleWidget.open();
+consoleWidget.log("Please type in username");
 consoleWidget.log("Hello");
 consoleWidget.log("(Press 'f' to continue)");
+var score = 0
+function changeScore(newscore){
+	score = score + newscore;
+	$.ajax({
+		data: 'username=' + username + "&score=" + score,
+		url: 'http:' + '/' + '/' + "php-becktest.rhcloud.com/voxel/setScore.php",
+		method: 'GET',
+	});
+}
+
+function createUser(username){
+	$.ajax({
+		data: 'username=' + username,
+		url: 'http:' + '/' + '/' + "php-becktest.rhcloud.com/voxel/registerUser.php",
+		method: 'GET',
+	});
+}
+consoleWidget.on('input', function(text){
+		createUser(text);
+		username = text;
+		consoleWidget.log("You are now registered, " + username);
+});
+
+
